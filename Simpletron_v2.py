@@ -1,11 +1,10 @@
 
-
 import numpy as np
 import pandas as pd
 
-
 #################################### 8.32 ####################################
-def Simpletron_v1():
+
+def Simpletron_v2(file):
     print("""*** Welcome to Simpletron! ***
     *** Please enter your program one instruction ***
     *** ( or data word ) at a time into the input ***
@@ -13,19 +12,19 @@ def Simpletron_v1():
     *** number and a question mark (?). You then ***
     *** type the word for that location. Enter ***
     *** -99999 to stop entering your program. ***""")
-
+    handle = open(file,'r')
+    idx = 0
+    memory = [0] * 100
+    for line in handle:
+        memory[idx] = (int(line))
+        idx += 1
     
     instructionCounter = 0
-    memory = [0] * 100
+    accumulator = 0
     while True:
-        if instructionCounter > 99:
-            return
-        memory[instructionCounter] = int(input(str(instructionCounter) + ' ? '))
         instructionRegister = memory[instructionCounter]
         operationCode = instructionRegister // 100
         operand = instructionRegister % 100
-        accumulator = 0
-        print(operationCode)
 
         while instructionRegister != -99999 and (instructionRegister > 9999 or instructionRegister < -9999):
             print('Enter a valid number -9999~9999')
@@ -99,5 +98,7 @@ def Simpletron_v1():
             print(df)
        
         instructionCounter += 1
+
         
-Simpletron_v1()
+###test
+Simpletron_v2('data_input.txt')
