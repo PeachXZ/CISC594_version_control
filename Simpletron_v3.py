@@ -1,11 +1,11 @@
 
-
 import numpy as np
 import pandas as pd
 
 
-#################################### 8.32 ####################################
-def Simpletron_v1():
+
+
+def Simpletron_v3(file):
     print("""*** Welcome to Simpletron! ***
     *** Please enter your program one instruction ***
     *** ( or data word ) at a time into the input ***
@@ -13,19 +13,19 @@ def Simpletron_v1():
     *** number and a question mark (?). You then ***
     *** type the word for that location. Enter ***
     *** -99999 to stop entering your program. ***""")
-
+    handle = open(file,'r')
+    idx = 0
+    memory = [0] * 100
+    for line in handle:
+        memory[idx] = (int(line))
+        idx += 1
     
     instructionCounter = 0
-    memory = [0] * 100
+    accumulator = 0
     while True:
-        if instructionCounter > 99:
-            return
-        memory[instructionCounter] = int(input(str(instructionCounter) + ' ? '))
         instructionRegister = memory[instructionCounter]
         operationCode = instructionRegister // 100
         operand = instructionRegister % 100
-        accumulator = 0
-        print(operationCode)
 
         while instructionRegister != -99999 and (instructionRegister > 9999 or instructionRegister < -9999):
             print('Enter a valid number -9999~9999')
@@ -44,6 +44,12 @@ def Simpletron_v1():
         elif operationCode == 11:
             print(f'print word in location {operand}')
             print(memory[operand])
+
+        #allow output of a new line
+        elif operationCode == 11:
+            print(f'output of a new line')
+            print('\n')
+        
         elif operationCode == 20:
             accumulator = int(memory[operand])
             print(f'loaded location {operand} into accumulator')
@@ -67,6 +73,23 @@ def Simpletron_v1():
         elif operationCode == 33:
             accumulator *= memory[operand]
             print(f'multiply a word from location {operand} by the word accumulator')
+        
+        #remainder calculations
+        elif operationCode == 34:
+            if memory[operand] == 0:
+                print('*** Attempt to divide by zero ***')
+                print('*** Simpletron execution abnormally terminated ***')
+                return
+            else:
+                accumulator %= memory[operand]
+                print(f'remainder of dividing word from location {operand} into the word accumulator')
+        
+        #exponentiation calculations
+        elif operationCode == 35:
+            accumulator **= memory[operand]
+            print(f'the word accumulator to the power of the word in location {operand}')
+
+        
         elif operationCode == 40:
             operationCode = operand
             print(f'branch to location {operand}')
@@ -100,4 +123,4 @@ def Simpletron_v1():
        
         instructionCounter += 1
         
-Simpletron_v1()
+Simpletron_v3('data_input.txt')
